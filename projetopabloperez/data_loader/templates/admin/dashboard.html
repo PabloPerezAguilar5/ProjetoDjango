@@ -1,65 +1,102 @@
-<!-- modelo html para o dashboard -->
 {% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<style>
+    .dashboard-container {
+        padding: 20px;
+    }
+    .chart-container {
+        margin-bottom: 30px;
+    }
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .products-table th, .products-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+    .action-btn {
+        margin-right: 5px;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #447e9b;
+        color: white;
+        border-radius: 3px;
+    }
+    .delete-btn {
+        background-color: #ba2121;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-  <h1>Dashboard de Productos por Categoría</h1>
-  
-  <canvas id="categoriasChart" width="400" height="200"></canvas>
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-      var ctx = document.getElementById('categoriasChart').getContext('2d');
-      var categoriasChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-              labels: [{% for item in productos_por_categoria %}'{{ item.categoria }}',{% endfor %}],
-              datasets: [{
-                  label: 'Número de Productos por Categoría',
-                  data: [{% for item in productos_por_categoria %}{{ item.total }},{% endfor %}],
-                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  borderWidth: 1
-              }]
-          },
-          options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
-  </script>
-  
-  <h2>Productos</h2>
-  <table>
-      <thead>
-          <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Categoría</th>
-              <th>Precio</th>
-              <th>Stock</th>
-              <th>Acciones</th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for produto in produtos_por_categoria %}
-          <tr>
-              <td>{{ produto.id }}</td>
-              <td>{{ produto.nome }}</td>
-              <td>{{ produto.categoria }}</td>
-              <td>{{ produto.preco }}</td>
-              <td>{{ produto.stock }}</td>
-              <td>
-                  <!-- Enlace para editar -->
-                  <a href="{% url 'admin:data_loader_produto_change' produto.id %}">Editar</a>
-                  
-                  <!-- Enlace para eliminar -->
-                  <a href="{% url 'admin:data_loader_produto_delete' produto.id %}">Eliminar</a>
-              </td>
-          </tr>
-          {% endfor %}
-      </tbody>
-  </table>
+<div class="dashboard-container">
+    <h1>Dashboard de Productos por Categoría</h1>
+    
+    <div class="chart-container">
+        <canvas id="categoriasChart" width="400" height="200"></canvas>
+    </div>
+    
+    <h2>Lista de Productos</h2>
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto.id }}</td>
+                <td>{{ produto.nome }}</td>
+                <td>{{ produto.categoria }}</td>
+                <td>${{ produto.preco }}</td>
+                <td>{{ produto.stock }}</td>
+                <td>
+                    <a href="{% url 'admin:data_loader_produto_change' produto.id %}" class="action-btn">Editar</a>
+                    <a href="{% url 'admin:data_loader_produto_delete' produto.id %}" class="action-btn delete-btn">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var ctx = document.getElementById('categoriasChart').getContext('2d');
+    var categoriasChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in productos_por_categoria %}'{{ item.categoria }}',{% endfor %}],
+            datasets: [{
+                label: 'Número de Productos por Categoría',
+                data: [{% for item in productos_por_categoria %}{{ item.total }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}
