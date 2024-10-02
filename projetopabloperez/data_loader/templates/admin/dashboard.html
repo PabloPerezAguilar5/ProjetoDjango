@@ -1,0 +1,65 @@
+<!-- modelo html para o dashboard -->
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1>Dashboard de Productos por Categoría</h1>
+  
+  <canvas id="categoriasChart" width="400" height="200"></canvas>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+      var ctx = document.getElementById('categoriasChart').getContext('2d');
+      var categoriasChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: [{% for item in productos_por_categoria %}'{{ item.categoria }}',{% endfor %}],
+              datasets: [{
+                  label: 'Número de Productos por Categoría',
+                  data: [{% for item in productos_por_categoria %}{{ item.total }},{% endfor %}],
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+  
+  <h2>Productos</h2>
+  <table>
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Acciones</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for produto in produtos_por_categoria %}
+          <tr>
+              <td>{{ produto.id }}</td>
+              <td>{{ produto.nome }}</td>
+              <td>{{ produto.categoria }}</td>
+              <td>{{ produto.preco }}</td>
+              <td>{{ produto.stock }}</td>
+              <td>
+                  <!-- Enlace para editar -->
+                  <a href="{% url 'admin:data_loader_produto_change' produto.id %}">Editar</a>
+                  
+                  <!-- Enlace para eliminar -->
+                  <a href="{% url 'admin:data_loader_produto_delete' produto.id %}">Eliminar</a>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+{% endblock %}
