@@ -33,9 +33,9 @@ custom_admin_site = CustomAdminSite(name='custom_admin')
 
 # Registre o modelo do Produto no Admin personalizado
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'categoria', 'preco', 'stock')  # Asegúrate de que 'stock' está aquí
+    list_display = ('id', 'nome', 'categoria', 'preco', 'stock')  
     search_fields = ('nome', 'categoria')
-    list_filter = ('categoria', 'stock',)  # Corrige aquí, agrega una coma entre 'categoria' y 'stock'
+    list_filter = ('categoria', 'stock',)  
     ordering = ('-preco',)
 
 # Cadastre o modelo e o administrador
