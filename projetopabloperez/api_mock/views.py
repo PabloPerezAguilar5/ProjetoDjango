@@ -10,10 +10,6 @@ class ProductDataView(APIView):
     def get(self, request, id, format=None):
         # Simule dados adicionais para o produto
         data = {
-            "id": id,
-            "nome": f"Produto {id}",
-            "additional_info": f"Información adicional para el produto com ID {id}",
-            "source": "API Mock Local",
-            "status": "Activo"
+            f"Información adicional para el produto com ID {id}"
         }
         return Response(data, status=status.HTTP_200_OK)

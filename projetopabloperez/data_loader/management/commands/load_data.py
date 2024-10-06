@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Carrega o plnailha
-        caminho = 'C:/Users/pablo/Desktop/Projeto_Pablo_Perez/projetopabloperez/Produtos3.csv'  # o .xlsx
+        caminho = 'C:/Users/pablo/Desktop/Projeto_PabloPerezDjango/projetopabloperez/Produtos3.csv'  # o .xlsx
         dados = pd.read_csv(caminho, encoding='ISO-8859-1')
 
         # Limpeza de dados
